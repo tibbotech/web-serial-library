@@ -87,9 +87,14 @@
             });
     }
 
-
-    function onModemStateChanged(modemState) {
-        console.log('onModemStateChanged: ' + modemState);
+    function onModemStateChanged(DTR, RTS, CTS, DSR, RI, DCD) {
+        console.log('onModemStateChanged:' 
+        + " DTR: " + DTR
+        + " RTS: " + RTS
+        + " CTS: " + CTS
+        + " DSR: " + DSR
+        + " RI: " + RI
+        + " DCD: " + DCD);
     }
 
     function onGetFlowControl(flowControl) {

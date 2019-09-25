@@ -113,13 +113,28 @@ Thus, the previous example becomes:
 
 
 
-| Function            | Parameter Type | Description                                                  | Returns |
-| ------------------- | -------------- | ------------------------------------------------------------ | ------- |
-| `setBaud(Baudrate)` | Number         | Sets baudrate to value passed in parameter<br />Tested on all of the standard baudrates between 110 and 921600. | -       |
-|                     |                |                                                              |         |
-|                     |                |                                                              |         |
-|                     |                |                                                              |         |
-|                     |                |                                                              |         |
-|                     |                |                                                              |         |
-|                     |                |                                                              |         |
+| Function                    | Parameter                             | Description                                                  | Return Value                          |
+| --------------------------- | ------------------------------------- | :----------------------------------------------------------- | ------------------------------------- |
+| `setBaud(Baud)`             | Number                                | Sets baud to value passed in parameter<br />Tested on all of the standard bauds between 110 and 921600. | -                                     |
+| setFlowControl(Flowcontrol) | "OFF",<br />"CTS_RTS"<br />"XON_XOFF" | Sets the flow control according to value passed passed as parameter | -                                     |
+| write(data)                 | String                                | Sends data passed as parameter through the serial port       | -                                     |
+| getFlowControl()            | -                                     | Returns the currently set flow control                       | "OFF",<br />"CTS_RTS"<br />"XON_XOFF" |
+| toggleLINE(Line)            | LINE_STATES.RTS<br />LINE_STATES.RTS  | Toggles the line that is passed as  a parameter.             | -                                     |
+| disconnect()                | -                                     | Disconnects from the Web232 board                            |                                       |
+
+
+
+### Callbacks
+
+| Callback                                       | Description                                                  |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| modemStateChanged(DTR, RTS, CTS, DSR, RI, DCD) | Triggered when modem state changes<br />Returns the updated state of each of the 6 lines |
+| flowControlChanged(flowControl)                | Triggered when flow control changes<br />Returns the updated flow control value |
+| baudChangeOK(baud)                             | Triggered when baud successfully changes<br />Returns the updated baud value |
+| onSerDataArrival(data)                         | Triggered when data arrives from the serial port<br />Returns the received data |
+| onSerDataSent(data)                            | Triggered when data is sent from the serial port<br />Returns the sent data |
+| onConnectOK()                                  | Triggered when a connection to the Web232 board is successfully established |
+| onDisconnectOK()                               | Triggered when a connection to the Web232 board is successfully terminated |
+| onConnectionError()                            | Triggered when a connection to the Web232 board is unexpectedly terminated, for example when the cable is unplugged |
+| onConnectFail()                                | Triggered when a connection to the Web232 board is not able to be established, for example if a connection to an incompatible device is attempted. |
 
