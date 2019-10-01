@@ -14,11 +14,15 @@ This JavaScript API allows web-based applications to access USB devices. WebUSB 
 
 ### Installation
 
+To use this library, the following lines should be included in the `<head>` section of the HTML file.
+
+```html
+<script type="text/javascript" src="TibboWebSerial.min.js"></script>
+```
+
 <br />
 
 ### Initialization 
-
-<br />
 
 #### Instantiating Serial Object
 
@@ -28,7 +32,7 @@ In order to use this library, it is necessary to first instantiate the TibboWebS
 
 <br />
 
-```
+```html
 <body>
     <button onclick="connectToDevice()">Connect to Device</button><br /><br />
 </body>
@@ -53,15 +57,13 @@ In order to use this library, it is necessary to first instantiate the TibboWebS
 
 When the button is clicked, a list of available USB devices will be displayed. The device called "Web232" should be selected. An instance of `TibboWebSerial.Serial` called `serial` has now been created!
 
-<br />
-
 #### Declaring Callbacks
 
 <br />
 
 There are a number of callbacks functions available, each one is detailed here. To use a callback, it must first be declared. A good time to do this would be just after instantiating the serial object. For example, to generate a callback when a successful connection is made to the device, the `connectOK` callback could be used. First, the callback should be declared after the serial object is instantiated using the following line of code:
 
-```
+```javascript
 serial.connectOK = this.onConnectOK;
 ```
 
@@ -69,7 +71,9 @@ serial.connectOK = this.onConnectOK;
 
 Next, the body of the callback must be added. In order to display an alert when the connection is ok, the following function could be added:
 
-```
+<br />
+
+```javascript
 function onConnectOK() {
 	alert("Successfully connected to device");
 }
@@ -79,7 +83,9 @@ function onConnectOK() {
 
 Thus, the previous example becomes:
 
-```
+<br />
+
+```html
 <body>
     <button onclick="connectToDevice()">Connect to Device</button><br /><br />
 </body>
@@ -128,11 +134,11 @@ Thus, the previous example becomes:
 
 | Callback                                       | Description                                                  |
 | ---------------------------------------------- | ------------------------------------------------------------ |
-| modemStateChanged(DTR, RTS, CTS, DSR, RI, DCD) | Triggered when modem state changes<br />Returns the updated state of each of the 6 lines |
-| flowControlChanged(flowControl)                | Triggered when flow control changes<br />Returns the updated flow control value |
-| baudChangeOK(baud)                             | Triggered when baud successfully changes<br />Returns the updated baud value |
-| onSerDataArrival(data)                         | Triggered when data arrives from the serial port<br />Returns the received data |
-| onSerDataSent(data)                            | Triggered when data is sent from the serial port<br />Returns the sent data |
+| modemStateChanged(DTR, RTS, CTS, DSR, RI, DCD) | Triggered when modem state changes<br />Arguments provide the updated state of each of the 6 lines |
+| flowControlChanged(flowControl)                | Triggered when flow control changes<br />Argument provides the updated flow control value |
+| baudChangeOK(baud)                             | Triggered when baud successfully changes<br />Argument provides the updated baud value |
+| onSerDataArrival(data)                         | Triggered when data arrives from the serial port<br />Argument provides the received data |
+| onSerDataSent(data)                            | Triggered when data is sent from the serial port<br />Argument provides the sent data |
 | onConnectOK()                                  | Triggered when a connection to the Web232 board is successfully established |
 | onDisconnectOK()                               | Triggered when a connection to the Web232 board is successfully terminated |
 | onConnectionError()                            | Triggered when a connection to the Web232 board is unexpectedly terminated, for example when the cable is unplugged |
