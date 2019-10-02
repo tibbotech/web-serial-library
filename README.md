@@ -1,4 +1,4 @@
-# Tibbo WebUSB-to-RS232 Library
+# Tibbo WebSerial Library
 
 
 
