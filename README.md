@@ -8,7 +8,7 @@
 
 The [Tibbo Web232](https://tibbo.com/store/webserial/web232.html) and [Tibbo Web485](https://tibbo.com/store/webserial/web485.html) boards work as standard USB-to-RS232/USB-to-RS485 adaptors, but with WebUSB support.
 
-This JavaScript API allows web-based applications to access USB devices. WebUSB is supported by the Google Chrome browser and is also included in the Chromium open-source browser builds. If you are using Chrome (or a Chromium-based) browser, your web pages will be able to access an RS232 device connected to the Web232 board or an RS485 device connected to a Web485 board.
+This JavaScript API allows web-based applications to access USB devices. WebUSB is supported by the Google Chrome browser and is also included in the Chromium open-source browser builds. If you are using Chrome (or a Chromium-based) browser, your web pages will be able to access an RS232 device connected to a Web232 board or an RS485 device connected to a Web485 board.
 
 <br />
 
@@ -55,7 +55,7 @@ In order to use this library, it is necessary to first instantiate the TibboWebS
 
 <br />
 
-When the button is clicked, a list of available USB devices will be displayed. The device called "Web232" should be selected. An instance of `TibboWebSerial.Serial` called `serial` has now been created!
+When the button is clicked, a list of available USB devices will be displayed. The device called "Web232" or "Web485" should be selected. An instance of `TibboWebSerial.Serial` called `serial` has now been created!
 
 #### Declaring Callbacks
 
@@ -124,7 +124,7 @@ Thus, the previous example becomes:
 | write(data)                 | String                                | Sends data passed as parameter through the serial port       | -                                     |
 | getFlowControl()            | -                                     | Returns the currently set flow control                       | "OFF",<br />"CTS_RTS"<br />"XON_XOFF" |
 | toggleLINE(Line)            | LINE_STATES.RTS<br />LINE_STATES.RTS  | Toggles the line that is passed as  a parameter.             | -                                     |
-| disconnect()                | -                                     | Disconnects from the Web232 board                            |                                       |
+| disconnect()                | -                                     | Disconnects from the Web232/Web485 board                            |                                       |
 
 <br />
 
@@ -139,8 +139,8 @@ Thus, the previous example becomes:
 | baudChangeOK(baud)                             | Triggered when baud successfully changes<br />Argument provides the updated baud value |
 | onSerDataArrival(data)                         | Triggered when data arrives from the serial port<br />Argument provides the received data |
 | onSerDataSent(data)                            | Triggered when data is sent from the serial port<br />Argument provides the sent data |
-| onConnectOK()                                  | Triggered when a connection to the Web232 board is successfully established |
-| onDisconnectOK()                               | Triggered when a connection to the Web232 board is successfully terminated |
-| onConnectionError()                            | Triggered when a connection to the Web232 board is unexpectedly terminated, for example when the cable is unplugged |
-| onConnectFail()                                | Triggered when a connection to the Web232 board is not able to be established, for example if a connection to an incompatible device is attempted. |
+| onConnectOK()                                  | Triggered when a connection to the Web232/Web485 board is successfully established |
+| onDisconnectOK()                               | Triggered when a connection to the Web232/Web485 board is successfully terminated |
+| onConnectionError()                            | Triggered when a connection to the Web232/Web485 board is unexpectedly terminated, for example when the cable is unplugged |
+| onConnectFail()                                | Triggered when a connection to the Web232/Web485 board is not able to be established, for example if a connection to an incompatible device is attempted. |
 
