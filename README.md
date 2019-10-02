@@ -6,9 +6,9 @@
 
 <br />
 
-The [Tibbo Web232 board](https://tibbo.com/store/webserial/web232.html) works as a standard USB-to-RS232 adaptor, but with WebUSB support.
+The [Tibbo Web232](https://tibbo.com/store/webserial/web232.html) and [Tibbo Web485](https://tibbo.com/store/webserial/web485.html) boards work as standard USB-to-RS232/USB-to-RS485 adaptors, but with WebUSB support.
 
-This JavaScript API allows web-based applications to access USB devices. WebUSB is supported by the Google Chrome browser and is also included in the Chromium open-source browser builds. If you are using Chrome (or a Chromium-based) browser, your web pages will be able to access an RS232 device connected to the Web485 board.
+This JavaScript API allows web-based applications to access USB devices. WebUSB is supported by the Google Chrome browser and is also included in the Chromium open-source browser builds. If you are using Chrome (or a Chromium-based) browser, your web pages will be able to access an RS232 device connected to the Web232 board or an RS485 device connected to a Web485 board.
 
 <br />
 
