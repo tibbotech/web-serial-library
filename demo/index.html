@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="TibboWebSerial.js"></script>
+    <title>Tibbo Serial Library</title>
+</head>
+
+
+
+<body>
+    <h1>Tibbo Serial Library</h1>
+
+    <button onclick="connectToDevice()">Connect to Device</button><br /><br />
+
+    Baudrate:<select onchange="serial.setBaud(event.target.value)">
+        <option value="110">110</option>
+        <option value="300">300</option>
+        <option value="600">600</option>
+        <option value="1200">1200</option>
+        <option value="2400">2400</option>
+        <option value="4800">4800</option>
+        <option value="9600">9600</option>
+        <option value="14400">14400</option>
+        <option value="19200">19200</option>
+        <option value="38400" selected="selected">38400</option>
+        <option value="56000">56000</option>
+        <option value="57600">57600</option>
+        <option value="115200">115200</option>
+        <option value="128000">128000</option>
+        <option value="153600">153600</option>
+        <option value="230400">230400</option>
+        <option value="256000">256000</option>
+        <option value="460800">460800</option>
+        <option value="921600">921600</option>
+    </select><br /><br />
+
+    Flow Control:<select onchange="serial.setFlowControl(event.target.value)">
+        <option value="OFF">Off</option>
+        <option value="CTS_RTS">CTS/RTS</option>
+        <option value="XON_XOFF">XON/XOFF</option>
+    </select><br /><br />
+
+    Received Text: <span id="ReceivedText"></span><br /><br />
+
+    <input id="Text1" type="text" name="tb1" />
+    <button onclick="serial.write(document.getElementById('Text1').value)">Send Data</button><br /><br />
+
+    <button onclick="serial.getFlowControl()">Get Flow Control</button><br /><br />
+
+    <button onclick="serial.toggleLINE(TibboWebSerial.LINE_STATES.RTS)">Toggle RTS Line</button><br /><br />
+
+    <button onclick="serial.toggleLINE(TibboWebSerial.LINE_STATES.DTR)">Toggle DTR Line</button><br /><br />
+
+    <button onclick="serial.disconnect()">Disconnect</button><br /><br />
+
+</body>
+
+<script>
+    
+    var serial
+
+    function connectToDevice() {
+        const filters = [];
+        navigator.usb.requestDevice({ filters: filters })
+            .then(device => {
+                serial = new TibboWebSerial.Serial(device, { encoding: "UTF8" });
+
+                //Callbacks
+                serial.modemStateChanged = this.onModemStateChanged;
+                serial.getFlowControlCallback = this.onGetFlowControl;
+                serial.flowControlChanged = this.onFlowControlChanged;
+                serial.baudChangeOK = this.onBaudChangeOK;
+                serial.serDataArrival = this.onSerDataArrival;
+                serial.serDataSent = this.onSerDataSent;
+                serial.connectFail = this.onConnectFail;
+                serial.connectOK = this.onConnectOK;
+                serial.disconnectOK = this.onDisconnectOK;
+                serial.connectionError = this.onConnectionError;
+
+                serial.connect()
+            })
+            .catch(e => {
+                console.log("There is no device. " + e);
+            });
+    }
+
+    function onModemStateChanged(DTR, RTS, CTS, DSR, RI, DCD) {
+        console.log('onModemStateChanged:' 
+        + " DTR: " + DTR
+        + " RTS: " + RTS
+        + " CTS: " + CTS
+        + " DSR: " + DSR
+        + " RI: " + RI
+        + " DCD: " + DCD);
+    }
+
+    function onGetFlowControl(flowControl) {
+        alert('onGetFlowControl: ' + flowControl);
+    }
+
+    function onFlowControlChanged(flowControl) {
+        console.log('onflowControlChanged: ' + flowControl);
+    }
+
+    function onBaudChangeOK(baud) {
+        console.log('onBaudChangeOK: ' + baud);
+    }
+
+    function onSerDataArrival(data) {
+        console.log('onSerDataArrival: ' + data);
+        var element = document.getElementById("ReceivedText");
+        element.innerHTML = data;
+    }
+
+    function onSerDataSent(data) {
+        console.log('onSerDataSent: ' + data);
+    }
+
+    function onConnectOK() {
+        alert("Successfully connected to device");
+    }
+
+    function onDisconnectOK() {
+        alert("Successfully disconnected from device");
+    }
+
+    function onConnectionError() {
+        alert("Connection Error!");
+    }
+
+    function onConnectFail() {
+        alert("Unable to connect, please select compatible device.");
+    }
+
+</script>
+</html>
