@@ -7,8 +7,9 @@ const SERVER_PORT = 8899;
 http.createServer(function (req, res) {
     let filename = path.join(__dirname, req.url);
     if (req.url != '/index.html') {
-        filename = path.join(__dirname, '../build', req.url)
+        filename = path.join(__dirname, '../', req.url)
     }
+    console.log('Filename:' + filename + "\r\n");
     fs.readFile(filename, function (err, data) {
         if (err) {
             res.writeHead(404);

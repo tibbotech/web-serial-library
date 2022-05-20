@@ -112,7 +112,7 @@
         data = DECODER.decode(data);
         console.log('onSerDataArrival: ' + data);
         var element = document.getElementById("ReceivedText");
-        element.innerHTML = data;
+        element.innerHTML = element.innerHTML  + data;
     }
 
     function onSerDataSent(data) {
