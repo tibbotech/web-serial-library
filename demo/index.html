@@ -46,7 +46,7 @@
     Received Text: <span id="ReceivedText"></span><br /><br />
 
     <input id="Text1" type="text" name="tb1" />
-    <button onclick="serial.write(document.getElementById('Text1').value)">Send Data</button><br /><br />
+    <button onclick="send_data(document.getElementById('Text1').value)">Send Data</button><br /><br />
 
     <button onclick="serial.getFlowControl()">Get Flow Control</button><br /><br />
 
@@ -110,6 +110,8 @@
     }
 
     function onSerDataArrival(data) {
+        DECODER = new TextDecoder();
+        data = DECODER.decode(data);
         console.log('onSerDataArrival: ' + data);
         var element = document.getElementById("ReceivedText");
         element.innerHTML = data;
@@ -133,6 +135,13 @@
 
     function onConnectFail() {
         alert("Unable to connect, please select compatible device.");
+    }
+
+    function send_data(data){
+        var a = new Uint8Array();
+        var enc = new TextEncoder();
+        a = enc.encode(data);
+        serial.write(a);
     }
 
 </script>

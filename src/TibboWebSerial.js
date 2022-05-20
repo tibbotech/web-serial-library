@@ -52,12 +52,14 @@ const SPECIAL_CHARACTERS = {
     XOFFCHAR: { index: 5, value: 19 }
 };
 
-const DECODER = new TextDecoder();
+
+const EventEmitter = require('events');
 
 let bufferedData = '';
 
-class Serial {
+class Serial extends EventEmitter {
     constructor(device, options) {
+        super();
         this.usb = device;
         this.requestTimedOut = false;
         this.modemState = null;
@@ -78,12 +80,9 @@ class Serial {
         this.connectOK = undefined;
         this.disconnectOK = undefined;
         this.connectionError = undefined;
-
         this.autoReadData = options !== undefined && options.autoReadData !== undefined ? options.autoReadData : true;
         this.flowControl = options !== undefined && options.flowControl !== undefined ? options.flowControl : 'OFF';
         this.baud = options !== undefined && options.baud !== undefined ? options.baud : 38400;
-        this.encoding = options !== undefined && options.encoding !== undefined ? options.encoding : '';
-
     }
 
     async connect() {
@@ -94,7 +93,9 @@ class Serial {
             await this.enable();
             await this.setBaud(this.baud);
             await this.setFlowControl(this.flowControl);
-            this.setTimers();
+            if (this.autoReadData) {
+                this.setTimers();
+            }
             if (this.connectOK) this.connectOK();
         } catch (ex) {
             if (this.connectFail) this.connectFail();
@@ -109,6 +110,28 @@ class Serial {
             index: 0x00,
             value: 0x01
         });
+    }
+
+    async initialize(device) {
+        this.usb = device;
+        this.deviceId = device.deviceId;
+
+        await this.usb.open();
+        await this.usb.selectConfiguration(1);
+        await this.usb.claimInterface(0);
+        //enable
+        await this.enable();
+        //set mhs handshake to off
+        await this.setMHS(0x03);
+        //set baud rate
+        await this.setBaud(this.baud);
+
+        if (this.dataTimer != undefined) {
+            clearInterval(this.dataTimer);
+        }
+
+        this.dataTimer = setInterval(this.readTimer.bind(this), 1);
+        this.canRead = true;
     }
 
     setTimers() {
@@ -183,14 +206,15 @@ class Serial {
         });
     }
 
-    async getBaud() {
-        await this.usb.controlTransferIn({
+    async getBaudRate() {
+        const r = await this.usb.controlTransferIn({
             requestType: 'vendor',
             recipient: 'device',
             request: CONTROL_COMMANDS.SET_BAUDDIV,
             index: 0x00,
             value: 0x0
         }, 1);
+        return new Uint8Array(r.data.buffer);
     }
 
     async getModemState() {
@@ -241,15 +265,12 @@ class Serial {
     }
 
     async write(data) {
-        var a = new Uint8Array();
-        var enc = new TextEncoder();
-        a = enc.encode(data);
-        if (a.length > 0) {
-            await this.usb.transferOut(2, a);
+        if (data.length > 0) {
+            await this.usb.transferOut(2, data);
             if (this.serDataSent) this.serDataSent(data);
         }
     }
-
+    
     async toggleLINE(line) {
         await this.setMHS(line ^ this.modemState);
         console.log('Line toggled');
@@ -260,6 +281,11 @@ class Serial {
             this.serDataArrival(bufferedData);
             bufferedData = '';
         }
+    }
+
+    async readAsync() {
+        const r = await this.usb.transferIn(2, 64);
+        return new Uint8Array(r.data.buffer);
     }
 
     async autoRead() {
@@ -273,8 +299,6 @@ class Serial {
             try {
                 let data = await this.autoRead();
                 if (data) {
-                    if (this.encoding === 'UTF8') {data = DECODER.decode(data);}
-                    if (this.encoding === 'HEX') {data = this.byteToHexString(data);}
                     if (this.serDataArrival !== undefined) {
                         if (this.autoReadData) {
                             this.serDataArrival(data);
@@ -282,6 +306,7 @@ class Serial {
                             bufferedData = bufferedData + data;
                         }
                     }
+                    this.emit('data', data);
                 }
             } catch (ex) {
                 if (ex.name === 'NotFoundError' && ex.code === 8 && ex.message.indexOf('disconnected') >= 0) {
@@ -293,20 +318,6 @@ class Serial {
             this.canRead = true;
         }
     }
-
-    byteToHexString(uint8arr) {
-        if (!uint8arr) {
-            return '';
-        }
-        let hexStr = '';
-        for (let i = 0; i < uint8arr.length; i++) {
-            let hex = (uint8arr[i] & 0xff).toString(16);
-            hex = (hex.length === 1) ? '0' + hex : hex;
-            hexStr += hex;
-        }
-        return hexStr.toUpperCase();
-    }
-
 }
 
 module.exports = { Serial, LINE_STATES, FLOW_CONTROL };

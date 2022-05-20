@@ -2,13 +2,12 @@ const path = require('path');
 const webpack = require('webpack');
 const getPackageJson = require('./scripts/getPackageJson');
 
-
 const {
-  version,
-  name,
-  license,
-  repository,
-  author,
+    version,
+    name,
+    license,
+    repository,
+    author,
 } = getPackageJson('version', 'name', 'license', 'repository', 'author');
 
 const banner = `
@@ -22,34 +21,16 @@ const banner = `
 `;
 
 module.exports = {
-  mode: "production",
-  entry: ['babel-polyfill', './src/TibboWebSerial.js'],
-  output: {
-    filename: 'TibboWebSerial.js',
-    path: path.resolve(__dirname, 'build'),
-    library: 'TibboWebSerial',
-    libraryTarget: 'umd'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader'
-        }
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
-        use: ['url-loader'],
-      }
+    mode: "development",
+    entry: './src/TibboWebSerial.js',
+    output: {
+
+        filename: 'TibboWebSerial.js',
+        path: path.resolve(__dirname, 'build'),
+        library: 'TibboWebSerial',
+        libraryTarget: 'umd'
+    },
+    plugins: [
+        new webpack.BannerPlugin(banner)
     ]
-  },
-  plugins: [
-    new webpack.BannerPlugin(banner)
-  ]
 };

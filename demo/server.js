@@ -1,6 +1,6 @@
 var fs = require('fs'),
-    path = require('path'),
-    http = require('http');
+path = require('path'),
+http = require('http');
 
 const SERVER_PORT = 8899;
 
