@@ -10,6 +10,10 @@ The [Tibbo Web232](https://tibbo.com/store/webserial/web232.html) and [Tibbo Web
 
 This JavaScript API allows web-based applications to access USB devices. WebUSB is supported by the Google Chrome browser and is also included in the Chromium open-source browser builds. If you are using Chrome (or a Chromium-based) browser, your web pages will be able to access an RS232 device connected to a Web232 board or an RS485 device connected to a Web485 board.
 
+### Click Try Now
+[<img src="https://tibbotech.github.io/web-serial-library/demo/prog-soi.svg" width="226"/>](https://tibbotech.github.io/web-serial-library/demo/)
+
+
 <br />
 
 ### Installation
